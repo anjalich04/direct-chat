@@ -3,6 +3,32 @@
 DirectChat is a full-stack real-time 1-on-1 private messaging web application built with Django, Django Channels, Daphne, WebSockets, Bootstrap, and Vanilla JavaScript. It allows authenticated users to exchange private messages in real time with chat history, read receipts, unread indicators, toast notifications, and typing status.
 
 ---
+## 📸 Screenshots
+
+### 🏠 Landing Page
+
+The DirectChat landing page introduces the application and highlights its core real-time messaging capabilities.
+![DirectChat Landing Page](screenshots/home.png)
+
+### 🔐 Login
+
+Secure session-based authentication allows registered users to access their private conversations.
+![DirectChat Login](screenshots/login.png)
+
+### 📝 Create Account
+
+New users can create an account with username, email, and password validation.
+![DirectChat Registration](screenshots/register.png)
+
+### 💬 Chat Dashboard
+
+The dashboard provides user search, unread message indicators, and access to private conversations.
+![DirectChat Dashboard](screenshots/dashboard.png)
+
+### ⚡ Real-Time Private Chat
+
+The chat interface supports real-time messaging, message history, delivery/read receipts, and a clean responsive interface.
+![DirectChat Real-Time Chat](screenshots/chat.png)
 
 ## Features
 
@@ -18,6 +44,7 @@ DirectChat is a full-stack real-time 1-on-1 private messaging web application bu
 - Responsive dark UI
 
 ---
+
 
 ## Tech Stack
 
