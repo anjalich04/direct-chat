@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Account - DirectChat{% endblock %}
+
+{% block body_class %}bg-dark-saas text-light{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* ==========================================================================
+       DirectChat - Dark SaaS Auth Theme (Balanced Registration Card)
+       ========================================================================== */
+    :root {
+        --bg-dark: #090d16;
+        --bg-card: rgba(15, 23, 42, 0.6);
+        --border-glass: rgba(255, 255, 255, 0.08);
+        --border-hover: rgba(56, 189, 248, 0.25);
+        --accent-blue: #38bdf8;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+    }
+
+    body.bg-dark-saas {
+        background-color: var(--bg-dark) !important;
+        color: var(--text-primary);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Ambient Background Glow */
+    .saas-bg-glow {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+        background: 
+            radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+            radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 45%);
+    }
+
+    /* Navbar */
+    .navbar-saas {
+        background: rgba(9, 13, 22, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-glass);
+        padding: 0.75rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+    }
+
+    .btn-ghost-saas {
+        color: var(--text-primary);
+        border: 1px solid var(--border-glass);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.45rem 1.1rem;
+        font-size: 0.88rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-ghost-saas:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary-saas {
+        background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.5rem 1.25rem;
+        font-size: 0.88rem;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-primary-saas:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.38);
+        color: #ffffff;
+    }
+
+    /* Auth Card Styling (Balanced Proportions) */
+    .auth-card-glow-wrapper {
+        position: relative;
+        max-width: 415px;
+        margin: 0 auto;
+        width: 100%;
+    }
+    .auth-card-bg-glow {
+        position: absolute;
+        inset: -11px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.16) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 75%);
+        border-radius: 19px;
+        filter: blur(16px);
+        z-index: 0;
+    }
+    .auth-card-saas {
+        position: relative;
+        z-index: 1;
+        background: #0b1120;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 13px;
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+    .auth-card-header {
+        background: #070a14;
+        padding: 1.15rem 1.35rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+    }
+    .auth-card-body {
+        padding: 1.35rem 1.35rem;
+    }
+    .auth-card-footer {
+        background: #070a14;
+        padding: 0.85rem 1.35rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        text-align: center;
+        font-size: 0.84rem;
+    }
+
+    /* Form Controls High Contrast */
+    .auth-card-saas form label {
+        color: #ffffff !important;
+        font-size: 0.84rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        display: block;
+    }
+    .auth-card-saas form input[type="text"],
+    .auth-card-saas form input[type="email"],
+    .auth-card-saas form input[type="password"],
+    .auth-card-saas form .form-control {
+        background-color: #0d1527 !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        color: #ffffff !important;
+        border-radius: 7px;
+        padding: 0.55rem 0.82rem;
+        font-size: 0.88rem;
+        line-height: 1.45;
+        transition: all 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .auth-card-saas form input::placeholder,
+    .auth-card-saas form .form-control::placeholder {
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+    .auth-card-saas form input::-webkit-input-placeholder,
+    .auth-card-saas form .form-control::-webkit-input-placeholder {
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+    .auth-card-saas form input::-moz-placeholder,
+    .auth-card-saas form .form-control::-moz-placeholder {
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+    .auth-card-saas form input:-ms-input-placeholder,
+    .auth-card-saas form .form-control:-ms-input-placeholder {
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+    .auth-card-saas form input[type="text"]:focus,
+    .auth-card-saas form input[type="email"]:focus,
+    .auth-card-saas form input[type="password"]:focus,
+    .auth-card-saas form .form-control:focus {
+        background-color: #0f1a30 !important;
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+        outline: none !important;
+        color: #ffffff !important;
+    }
+    /* Webkit Autofill Override */
+    .auth-card-saas form input:-webkit-autofill,
+    .auth-card-saas form input:-webkit-autofill:hover,
+    .auth-card-saas form input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #ffffff !important;
+        -webkit-box-shadow: 0 0 0px 1000px #0d1527 inset !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+</style>
+{% endblock %}
+
+{% block navbar %}
+<!-- HEADER / NAVBAR -->
+<nav class="navbar navbar-expand navbar-dark navbar-saas">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'home' %}{% endif %}">
+            <div class="d-flex align-items-center justify-content-center rounded-2" style="background: linear-gradient(135deg, #2563eb, #7c3aed); width: 30px; height: 30px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill text-white" viewBox="0 0 16 16">
+                    <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15"/>
+                </svg>
+            </div>
+            <span class="fs-5 fw-bold text-white tracking-tight">DirectChat</span>
+        </a>
+
+        <div class="d-flex align-items-center gap-3 ms-auto">
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="btn btn-primary-saas">Dashboard</a>
+                <a href="{% url 'logout' %}" class="btn btn-ghost-saas">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-ghost-saas">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-primary-saas">Create Account</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+{% endblock navbar %}
+
+{% block main_layout %}
+<div class="saas-bg-glow"></div>
+
+<main class="flex-grow-1 d-flex flex-column justify-content-center py-3">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+                <div class="auth-card-glow-wrapper">
+                    <div class="auth-card-bg-glow"></div>
+                    <div class="auth-card-saas">
+                        <!-- Card Header -->
+                        <div class="auth-card-header">
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-2" style="background: rgba(56, 189, 248, 0.1); width: 38px; height: 38px; color: #38bdf8;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                                    <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                    <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+                                </svg>
+                            </div>
+                            <h5 class="mb-1 fw-extrabold text-white">Create Account</h5>
+                            <p class="text-secondary small mb-0" style="color: #94a3b8 !important; font-size: 0.8rem;">Join DirectChat for private messaging</p>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="auth-card-body">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-dismissible fade show border rounded-2 p-2.5 mb-3 small text-center" 
+                                         role="alert" 
+                                         style="background-color: {% if message.tags == 'error' or message.tags == 'danger' %}rgba(239, 68, 68, 0.15){% elif message.tags == 'success' %}rgba(16, 185, 129, 0.15){% elif message.tags == 'warning' %}rgba(245, 158, 11, 0.15){% else %}rgba(56, 189, 248, 0.15){% endif %} !important; 
+                                                color: {% if message.tags == 'error' or message.tags == 'danger' %}#f87171{% elif message.tags == 'success' %}#34d399{% elif message.tags == 'warning' %}#fbbf24{% else %}#38bdf8{% endif %} !important; 
+                                                border-color: {% if message.tags == 'error' or message.tags == 'danger' %}rgba(239, 68, 68, 0.3){% elif message.tags == 'success' %}rgba(16, 185, 129, 0.3){% elif message.tags == 'warning' %}rgba(245, 158, 11, 0.3){% else %}rgba(56, 189, 248, 0.3){% endif %} !important;">
+                                        {{ message }}
+                                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.65rem; padding: 0.6rem;"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger bg-danger bg-opacity-10 border border-danger border-opacity-25 rounded-2 p-2.5 mb-3 small text-center" style="color: #f87171 !important; border-color: rgba(239, 68, 68, 0.3) !important;">
+                                    {% for error in form.non_field_errors %}
+                                        <div class="fw-semibold">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            <form method="POST" novalidate>
+                                {% csrf_token %}
+
+                                <!-- Username Field -->
+                                <div class="mb-3">
+                                    <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                                    {{ form.username }}
+                                    {% if form.username.errors %}
+                                        <div class="text-danger small mt-1" style="font-size: 0.76rem; color: #f87171 !important;">
+                                            {% for error in form.username.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Email Field -->
+                                <div class="mb-3">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="text-danger small mt-1" style="font-size: 0.76rem; color: #f87171 !important;">
+                                            {% for error in form.email.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Password Field -->
+                                <div class="mb-3">
+                                    <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                                    {{ form.password }}
+                                    {% if form.password.errors %}
+                                        <div class="text-danger small mt-1" style="font-size: 0.76rem; color: #f87171 !important;">
+                                            {% for error in form.password.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Confirm Password Field -->
+                                <div class="mb-4">
+                                    <label for="{{ form.confirm_password.id_for_label }}" class="form-label">Confirm Password</label>
+                                    {{ form.confirm_password }}
+                                    {% if form.confirm_password.errors %}
+                                        <div class="text-danger small mt-1" style="font-size: 0.76rem; color: #f87171 !important;">
+                                            {% for error in form.confirm_password.errors %}
+                                                <div>{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary-saas w-100 py-2.25">
+                                    Create Account
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="auth-card-footer">
+                            <span class="text-secondary" style="color: #94a3b8 !important;">Already have an account?</span>
+                            <a href="{% url 'login' %}" class="fw-bold text-decoration-none ms-1" style="color: #38bdf8;">Login here</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock main_layout %}
+
+{% block footer %}
+<!-- FOOTER -->
+<footer class="py-3 border-top border-secondary border-opacity-10" style="background: #060911;">
+    <div class="container">
+        <div class="row align-items-center g-2 text-center text-sm-start">
+            <div class="col-12 col-sm-4">
+                <strong class="text-white fs-6">DirectChat</strong>
+            </div>
+            <div class="col-12 col-sm-4 text-center">
+                <span class="text-secondary small" style="color: #94a3b8 !important; font-size: 0.82rem;">Private conversations, made simple.</span>
+            </div>
+            <div class="col-12 col-sm-4 text-sm-end">
+                <span class="text-muted small" style="color: #64748b !important; font-size: 0.82rem;">&copy; 2026 DirectChat</span>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock footer %}

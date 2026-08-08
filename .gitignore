@@ -1,0 +1,28 @@
+# Python virtual environment
+venv/
+env/
+ENV/
+
+# Python cache & compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Django local database & static/media
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Environment secrets
+.env
+.env.local
+
+# IDE & Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store

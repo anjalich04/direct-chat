@@ -1,0 +1,919 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat Dashboard - DirectChat{% endblock %}
+
+{% block body_class %}bg-dark-saas text-light{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* ==========================================================================
+       DirectChat - Dark SaaS Dashboard Theme (Matching Landing Page)
+       ========================================================================== */
+    :root {
+        --bg-dark: #090d16;
+        --bg-card: rgba(15, 23, 42, 0.6);
+        --border-glass: rgba(255, 255, 255, 0.08);
+        --border-hover: rgba(56, 189, 248, 0.25);
+        --accent-blue: #38bdf8;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+    }
+
+    body.bg-dark-saas {
+        background-color: var(--bg-dark) !important;
+        color: var(--text-primary);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Ambient Background Glow */
+    .saas-bg-glow {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+        background: 
+            radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+            radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 45%);
+    }
+
+    /* Sticky Navbar */
+    .navbar-saas {
+        background: rgba(9, 13, 22, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-glass);
+        padding: 0.75rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+    }
+
+    .btn-ghost-saas {
+        color: var(--text-primary);
+        border: 1px solid var(--border-glass);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-ghost-saas:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary-saas {
+        background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.45rem 1.15rem;
+        font-size: 0.85rem;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-primary-saas:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.38);
+        color: #ffffff;
+    }
+    .btn-primary-saas:disabled {
+        opacity: 0.5;
+        transform: none !important;
+        box-shadow: none !important;
+        cursor: not-allowed;
+    }
+
+    /* Dashboard Layout Window */
+    .dashboard-wrapper {
+        position: relative;
+        max-width: 1280px;
+        margin: 0 auto;
+        width: 100%;
+    }
+    .dashboard-bg-glow {
+        position: absolute;
+        inset: -10px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(168, 85, 247, 0.08) 50%, transparent 75%);
+        border-radius: 18px;
+        filter: blur(16px);
+        z-index: 0;
+    }
+    .dashboard-container {
+        position: relative;
+        z-index: 1;
+        height: 78vh;
+        min-height: 520px;
+        background: #0b1120;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: #0d1527;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .sidebar-header {
+        padding: 0.85rem 1.1rem;
+        background-color: #070a14;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .search-box {
+        padding: 0.65rem 1.1rem;
+        background-color: #080d18;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .search-box .input-group-text {
+        background-color: #0d1527 !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        border-right: none !important;
+        color: #94a3b8 !important;
+    }
+    .search-box .form-control {
+        background-color: #0d1527 !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        border-left: none !important;
+        color: #ffffff !important;
+        font-size: 0.88rem;
+        padding: 0.5rem 0.75rem;
+    }
+    .search-box .form-control::placeholder {
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+    .search-box .form-control:focus {
+        background-color: #0f1a30 !important;
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+        color: #ffffff !important;
+        outline: none !important;
+    }
+
+    .user-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.5rem;
+    }
+    .user-item {
+        display: flex;
+        align-items: center;
+        padding: 0.65rem 0.85rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: 0.25rem;
+        border-left: 3px solid transparent;
+    }
+    .user-item:hover {
+        background-color: rgba(255, 255, 255, 0.04);
+    }
+    .user-item.active {
+        background-color: rgba(56, 189, 248, 0.12);
+        border-left-color: var(--accent-blue);
+    }
+    .user-item.active .user-name-text {
+        color: #ffffff !important;
+    }
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    /* Chat Main Area */
+    .chat-area {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background-color: #090e1a;
+    }
+    .chat-header {
+        padding: 0.85rem 1.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: #070a14;
+        display: flex;
+        align-items: center;
+    }
+    .chat-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.25rem;
+        background-color: #090e1a;
+    }
+    .chat-footer {
+        padding: 0.75rem 1.25rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: #070a14;
+    }
+    .chat-footer input[type="text"] {
+        background-color: #0d1527 !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        color: #ffffff !important;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        padding: 0.6rem 0.85rem;
+        line-height: 1.45;
+        transition: all 0.2s ease;
+    }
+    .chat-footer input[type="text"]::placeholder {
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+    .chat-footer input[type="text"]:disabled {
+        background-color: #080d18 !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        color: #64748b !important;
+    }
+    .chat-footer input[type="text"]:disabled::placeholder {
+        color: #64748b !important;
+        opacity: 1 !important;
+    }
+    .chat-footer input[type="text"]:focus {
+        background-color: #0f1a30 !important;
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+        color: #ffffff !important;
+        outline: none !important;
+    }
+    /* Webkit Autofill Override */
+    .chat-footer input[type="text"]:-webkit-autofill,
+    .search-box .form-control:-webkit-autofill {
+        -webkit-text-fill-color: #ffffff !important;
+        -webkit-box-shadow: 0 0 0px 1000px #0d1527 inset !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+
+    /* Messages */
+    .message-container {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0.85rem;
+        max-width: 75%;
+    }
+    .message-container.me { align-self: flex-end; align-items: flex-end; }
+    .message-container.other { align-self: flex-start; align-items: flex-start; }
+    .message-bubble {
+        padding: 0.65rem 0.9rem;
+        border-radius: 10px;
+        font-size: 0.88rem;
+        line-height: 1.4;
+        word-break: break-word;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .message-bubble-me {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #ffffff;
+        border-bottom-right-radius: 2px;
+    }
+    .message-bubble-other {
+        background-color: #1e293b;
+        color: #e2e8f0;
+        border-bottom-left-radius: 2px;
+    }
+    .message-time {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    .message-receipt {
+        font-weight: bold;
+        font-size: 0.78rem;
+    }
+    .receipt-read { color: #38bdf8; }
+    .receipt-unread { color: #64748b; }
+
+    .empty-state {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    /* Scrollbars */
+    .user-list::-webkit-scrollbar,
+    .chat-body::-webkit-scrollbar {
+        width: 5px;
+    }
+    .user-list::-webkit-scrollbar-thumb,
+    .chat-body::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block navbar %}
+<!-- HEADER / NAVBAR -->
+<nav class="navbar navbar-expand navbar-dark navbar-saas">
+    <div class="container">
+        <!-- Logo & Brand Name -->
+        <a class="navbar-brand d-flex align-items-center gap-2 my-0" href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'home' %}{% endif %}">
+            <div class="d-flex align-items-center justify-content-center rounded-2" style="background: linear-gradient(135deg, #2563eb, #7c3aed); width: 32px; height: 32px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill text-white" viewBox="0 0 16 16">
+                    <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15"/>
+                </svg>
+            </div>
+            <span class="fs-5 fw-bold text-white tracking-tight">DirectChat</span>
+        </a>
+
+        <!-- Right User Actions -->
+        <div class="d-flex align-items-center gap-3 ms-auto">
+            {% if user.is_authenticated %}
+                <div class="d-flex align-items-center gap-2 px-2.5 py-1 rounded-pill" style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);">
+                    <div class="d-flex align-items-center justify-content-center rounded-circle text-white fw-bold" style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); width: 24px; height: 24px; font-size: 0.72rem;">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    <span class="small fw-semibold text-white me-1">{{ user.username }}</span>
+                </div>
+                <a href="{% url 'logout' %}" class="btn btn-ghost-saas">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-ghost-saas">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-primary-saas">Create Account</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+{% endblock navbar %}
+
+{% block main_layout %}
+<div class="saas-bg-glow"></div>
+
+{% csrf_token %}
+
+<!-- TOAST CONTAINER FOR REAL-TIME NOTIFICATIONS -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1090;"></div>
+
+<main class="flex-grow-1 d-flex flex-column justify-content-center py-3">
+    <div class="container-fluid px-3 px-md-4">
+        <div class="dashboard-wrapper">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-dismissible fade show border rounded-2 p-2 mb-2.5 small text-center" 
+                         role="alert" 
+                         style="background-color: {% if message.tags == 'error' or message.tags == 'danger' %}rgba(239, 68, 68, 0.15){% elif message.tags == 'success' %}rgba(16, 185, 129, 0.15){% elif message.tags == 'warning' %}rgba(245, 158, 11, 0.15){% else %}rgba(56, 189, 248, 0.15){% endif %} !important; 
+                                color: {% if message.tags == 'error' or message.tags == 'danger' %}#f87171{% elif message.tags == 'success' %}#34d399{% elif message.tags == 'warning' %}#fbbf24{% else %}#38bdf8{% endif %} !important; 
+                                border-color: {% if message.tags == 'error' or message.tags == 'danger' %}rgba(239, 68, 68, 0.3){% elif message.tags == 'success' %}rgba(16, 185, 129, 0.3){% elif message.tags == 'warning' %}rgba(245, 158, 11, 0.3){% else %}rgba(56, 189, 248, 0.3){% endif %} !important;">
+                        {{ message }}
+                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.65rem; padding: 0.6rem;"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="dashboard-bg-glow"></div>
+            <div class="row g-0 dashboard-container">
+                
+                <!-- SIDEBAR -->
+                <div class="col-md-4 col-lg-3 sidebar">
+                    <div class="sidebar-header d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center me-2 overflow-hidden">
+                            <div class="user-avatar shadow-sm me-2">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                            <div class="text-truncate">
+                                <h6 class="mb-0 fw-bold text-white text-truncate" style="font-size: 0.9rem;">{{ user.username }}</h6>
+                                <small class="text-success fw-semibold" id="connectionStatus" style="font-size: 0.72rem;">● Online</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-box">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                </svg>
+                            </span>
+                            <input type="text" id="userSearchInput" class="form-control" placeholder="Search users...">
+                        </div>
+                    </div>
+
+                    <div class="user-list" id="userList">
+                        {% for u in users %}
+                            <div class="user-item js-user-item" data-user-id="{{ u.id }}" data-username="{{ u.username }}">
+                                <div class="user-avatar shadow-sm">
+                                    {{ u.username|slice:":1"|upper }}
+                                </div>
+                                <div class="flex-grow-1 min-width-0 me-2">
+                                    <div class="fw-bold text-truncate user-name-text text-light" style="font-size: 0.85rem;">{{ u.username }}</div>
+                                    <small class="text-secondary small" style="font-size: 0.72rem; color: #94a3b8 !important;">Registered user</small>
+                                </div>
+                                <!-- UNREAD BADGE -->
+                                <span class="badge bg-danger rounded-pill js-unread-badge {% if u.unread_count == 0 %}d-none{% endif %}" id="unread-badge-{{ u.id }}" style="background-color: #ef4444 !important; font-size: 0.7rem;">
+                                    {{ u.unread_count }}
+                                </span>
+                            </div>
+                        {% empty %}
+                            <div class="text-center text-muted py-5 px-3">
+                                <p class="mb-0 small" style="color: #94a3b8 !important;">No other users registered yet.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- CHAT PANEL -->
+                <div class="col-md-8 col-lg-9 chat-area">
+                    
+                    <!-- EMPTY STATE -->
+                    <div id="emptyChatState" class="empty-state">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="background: rgba(56, 189, 248, 0.08); width: 56px; height: 56px; color: #38bdf8;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+                                <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.308c-.57.296-1.923.864-4.18 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                            </svg>
+                        </div>
+                        <h5 class="fw-bold text-white mb-1">Select a user to start chatting</h5>
+                        <p class="text-secondary small mb-0" style="color: #94a3b8 !important;">Choose any contact from the sidebar to open a conversation window.</p>
+                    </div>
+
+                    <!-- ACTIVE CHAT VIEW -->
+                    <div id="activeChatState" class="d-none h-100 flex-column">
+                        <div class="chat-header">
+                            <div class="user-avatar shadow-sm me-2.5" id="activeUserAvatar" style="width: 32px; height: 32px; font-size: 0.78rem;">?</div>
+                            <div>
+                                <h6 class="mb-0 fw-bold text-white" id="activeUserName" style="font-size: 0.9rem;">Selected User</h6>
+                                <small class="text-secondary" id="activeUserStatus" style="font-size: 0.72rem; color: #94a3b8 !important;">Direct Conversation</small>
+                            </div>
+                        </div>
+
+                        <div class="chat-body d-flex flex-column" id="chatMessagesArea">
+                            <!-- History and live messages load here -->
+                        </div>
+
+                        <div class="chat-footer">
+                            <form id="sendMessageForm" class="d-flex align-items-center gap-2">
+                                <input type="text" id="messageInput" class="form-control py-2" placeholder="Type a message..." disabled autocomplete="off">
+                                <button type="submit" id="sendMessageBtn" class="btn btn-primary-saas px-3.5 py-2" disabled>Send</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock main_layout %}
+
+{% block footer %}
+<!-- FOOTER -->
+<footer class="py-3 border-top border-secondary border-opacity-10" style="background: #060911;">
+    <div class="container">
+        <div class="row align-items-center g-2 text-center text-sm-start">
+            <div class="col-12 col-sm-4">
+                <strong class="text-white fs-6">DirectChat</strong>
+            </div>
+            <div class="col-12 col-sm-4 text-center">
+                <span class="text-secondary small" style="color: #94a3b8 !important; font-size: 0.82rem;">Private conversations, made simple.</span>
+            </div>
+            <div class="col-12 col-sm-4 text-sm-end">
+                <span class="text-muted small" style="color: #64748b !important; font-size: 0.82rem;">&copy; 2026 DirectChat</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentUserId = Number("{{ user.id }}");
+        const searchInput = document.getElementById('userSearchInput');
+        const userItems = document.querySelectorAll('.js-user-item');
+        const emptyChatState = document.getElementById('emptyChatState');
+        const activeChatState = document.getElementById('activeChatState');
+        const activeUserName = document.getElementById('activeUserName');
+        const activeUserAvatar = document.getElementById('activeUserAvatar');
+        const activeUserStatus = document.getElementById('activeUserStatus');
+        const chatMessagesArea = document.getElementById('chatMessagesArea');
+        const sendMessageForm = document.getElementById('sendMessageForm');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const connectionStatus = document.getElementById('connectionStatus');
+        const toastContainer = document.getElementById('toastContainer');
+
+        let activeUserId = null;
+        let chatSocket = null;
+        let typingTimeout = null;
+        let isTypingState = false;
+
+        // CSRF Token Helper
+        function getCsrfToken() {
+            const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (csrfInput) return csrfInput.value;
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('csrftoken='))
+                ?.split('=')[1];
+            return cookieValue || '';
+        }
+
+        // Helper: Dynamically enable/disable Send button based on non-whitespace content
+        function toggleSendButtonState() {
+            const hasText = messageInput.value.trim().length > 0;
+            sendMessageBtn.disabled = !hasText || !activeUserId;
+        }
+
+        // 1. Establish WebSocket Connection
+        function connectWebSocket() {
+            const wsScheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            const wsUrl = `${wsScheme}://${window.location.host}/ws/chat/`;
+            
+            chatSocket = new WebSocket(wsUrl);
+
+            chatSocket.onopen = function () {
+                if (connectionStatus) {
+                    connectionStatus.textContent = '● Online';
+                    connectionStatus.className = 'text-success fw-semibold';
+                }
+            };
+
+            chatSocket.onmessage = function (e) {
+                try {
+                    const msg = JSON.parse(e.data);
+
+                    if (msg.type === 'typing_status') {
+                        handleTypingStatusEvent(msg);
+                        return;
+                    }
+
+                    if (msg.type === 'messages_read') {
+                        handleMessagesReadEvent(msg);
+                        return;
+                    }
+
+                    handleIncomingMessage(msg);
+                } catch (err) {
+                    console.error('JSON Parse error:', err);
+                }
+            };
+
+            chatSocket.onclose = function () {
+                if (connectionStatus) {
+                    connectionStatus.textContent = '● Reconnecting...';
+                    connectionStatus.className = 'text-warning fw-semibold';
+                }
+                setTimeout(connectWebSocket, 3000);
+            };
+        }
+
+        connectWebSocket();
+
+        // 2. Real-Time Read Receipts Update
+        function handleMessagesReadEvent(msg) {
+            const readerId = Number(msg.reader_id);
+            if (activeUserId && Number(activeUserId) === readerId) {
+                const receipts = document.querySelectorAll('.message-container.me .message-receipt');
+                receipts.forEach(r => {
+                    r.textContent = '✓✓';
+                    r.className = 'message-receipt receipt-read';
+                    r.title = 'Read';
+                });
+            }
+        }
+
+        // 3. Handle Typing Status Events
+        function handleTypingStatusEvent(msg) {
+            const senderId = Number(msg.sender_id);
+            if (activeUserId && Number(activeUserId) === senderId) {
+                if (msg.is_typing) {
+                    activeUserStatus.textContent = `${msg.sender_username} is typing...`;
+                    activeUserStatus.className = 'fw-semibold fst-italic';
+                    activeUserStatus.style.color = '#38bdf8';
+                } else {
+                    activeUserStatus.textContent = 'Direct Conversation';
+                    activeUserStatus.className = 'text-secondary';
+                    activeUserStatus.style.color = '#94a3b8';
+                }
+            }
+        }
+
+        // 4. Process Live Incoming WebSocket Messages
+        function handleIncomingMessage(msg) {
+            const senderId = Number(msg.sender_id);
+            const isMe = senderId === currentUserId;
+
+            if (isMe) {
+                if (activeUserId && Number(activeUserId) === Number(msg.receiver_id)) {
+                    appendSingleMessage({
+                        id: msg.id,
+                        content: msg.content,
+                        timestamp: msg.timestamp,
+                        is_me: true,
+                        is_read: false
+                    });
+                    scrollToBottom();
+                }
+                return;
+            }
+
+            const isForActiveChat = activeUserId && Number(activeUserId) === senderId;
+
+            if (isForActiveChat) {
+                appendSingleMessage({
+                    id: msg.id,
+                    content: msg.content,
+                    timestamp: msg.timestamp,
+                    is_me: false,
+                    is_read: true
+                });
+                scrollToBottom();
+                markMessagesAsRead(activeUserId);
+            } else {
+                updateSidebarUnreadBadge(senderId);
+                showToastNotification(msg.sender_username, msg.content, senderId);
+            }
+        }
+
+        // 5. Send Typing Indicator Event
+        function sendTypingSignal(isTyping) {
+            if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN || !activeUserId) return;
+            chatSocket.send(JSON.stringify({
+                type: 'typing',
+                receiver_id: activeUserId,
+                is_typing: isTyping
+            }));
+        }
+
+        // Input Listeners: Enable/disable Send button & Trigger typing indicator
+        messageInput.addEventListener('input', function () {
+            toggleSendButtonState();
+
+            if (!activeUserId) return;
+
+            if (!isTypingState) {
+                isTypingState = true;
+                sendTypingSignal(true);
+            }
+
+            clearTimeout(typingTimeout);
+
+            typingTimeout = setTimeout(function () {
+                if (isTypingState) {
+                    isTypingState = false;
+                    sendTypingSignal(false);
+                }
+            }, 1000);
+        });
+
+        // Keydown Listener: Enter sends message, Shift+Enter creates newline
+        messageInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (messageInput.value.trim().length > 0 && activeUserId) {
+                    sendMessageForm.dispatchEvent(new Event('submit', { cancelable: true }));
+                }
+            }
+        });
+
+        // Helper: Update Sidebar Unread Badge
+        function updateSidebarUnreadBadge(senderId) {
+            const badge = document.getElementById(`unread-badge-${senderId}`);
+            if (badge) {
+                let currentCount = parseInt(badge.textContent.trim()) || 0;
+                currentCount += 1;
+                badge.textContent = currentCount;
+                badge.classList.remove('d-none');
+            }
+        }
+
+        // Helper: Display Toast Notification in Dark SaaS Style
+        function showToastNotification(senderUsername, content, senderId) {
+            if (!toastContainer) return;
+
+            const toastId = 'toast-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            const previewText = content.length > 45 ? content.substring(0, 45) + '...' : content;
+
+            const toastHtml = `
+                <div id="${toastId}" class="toast align-items-center text-white border border-secondary border-opacity-25 shadow-lg mb-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="4000" style="background: #0b1120; border-radius: 10px;">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <strong class="d-block mb-0.5" style="color: #38bdf8;">💬 ${senderUsername}</strong>
+                            <span class="small text-light" style="font-size: 0.82rem;">${previewText}</span>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2.5 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+
+            const toastElement = document.getElementById(toastId);
+            if (toastElement) {
+                const bsToast = new bootstrap.Toast(toastElement);
+                bsToast.show();
+
+                toastElement.addEventListener('hidden.bs.toast', function () {
+                    toastElement.remove();
+                });
+            }
+        }
+
+        // 6. Mark Messages as Read API Call & Clear Badge
+        function markMessagesAsRead(otherUserId) {
+            fetch(`/api/messages/${otherUserId}/read`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const badge = document.getElementById(`unread-badge-${otherUserId}`);
+                    if (badge) {
+                        badge.textContent = '0';
+                        badge.classList.add('d-none');
+                    }
+                }
+            })
+            .catch(err => console.error('Error marking messages as read:', err));
+        }
+
+        // 7. User Search Filter
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const q = this.value.toLowerCase().trim();
+                userItems.forEach(item => {
+                    const name = item.getAttribute('data-username').toLowerCase();
+                    item.style.display = name.includes(q) ? 'flex' : 'none';
+                });
+            });
+        }
+
+        // 8. Click User -> Fetch Chat History & Focus Input
+        userItems.forEach(item => {
+            item.addEventListener('click', function () {
+                if (isTypingState && activeUserId) {
+                    sendTypingSignal(false);
+                    isTypingState = false;
+                    clearTimeout(typingTimeout);
+                }
+
+                userItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                const userId = this.getAttribute('data-user-id');
+                const username = this.getAttribute('data-username');
+
+                activeUserId = userId;
+                activeUserName.textContent = username;
+                activeUserAvatar.textContent = username.charAt(0).toUpperCase();
+                activeUserStatus.textContent = 'Direct Conversation';
+                activeUserStatus.className = 'text-secondary';
+                activeUserStatus.style.color = '#94a3b8';
+
+                emptyChatState.classList.add('d-none');
+                activeChatState.classList.remove('d-none');
+                activeChatState.classList.add('d-flex');
+
+                messageInput.disabled = false;
+                toggleSendButtonState();
+                messageInput.focus();
+
+                const badge = this.querySelector('.js-unread-badge');
+                if (badge) {
+                    badge.textContent = '0';
+                    badge.classList.add('d-none');
+                }
+
+                fetchChatHistory(userId);
+                markMessagesAsRead(userId);
+            });
+        });
+
+        // 9. Fetch Chat History via AJAX
+        function fetchChatHistory(userId) {
+            chatMessagesArea.innerHTML = `
+                <div class="d-flex align-items-center justify-content-center h-100 text-secondary" style="color: #94a3b8 !important;">
+                    <div class="spinner-border spinner-border-sm me-2" style="color: #38bdf8;"></div>
+                    Loading messages...
+                </div>
+            `;
+
+            fetch(`/chat/messages/${userId}/`)
+                .then(res => res.json())
+                .then(data => renderMessages(data.messages))
+                .catch(err => {
+                    console.error('Fetch History Error:', err);
+                    chatMessagesArea.innerHTML = `<div class="text-center text-danger py-4">Error loading history.</div>`;
+                });
+        }
+
+        // 10. Render Messages
+        function renderMessages(messages) {
+            chatMessagesArea.innerHTML = '';
+            if (!messages || messages.length === 0) {
+                chatMessagesArea.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center h-100 text-secondary" id="noMessagesPlaceholder" style="color: #94a3b8 !important;">
+                        <p class="mb-0 fs-6">No messages yet. Start the conversation.</p>
+                    </div>
+                `;
+                return;
+            }
+            messages.forEach(msg => appendSingleMessage(msg));
+            scrollToBottom();
+        }
+
+        // 11. Append Message Bubble
+        function appendSingleMessage(msg) {
+            const placeholder = document.getElementById('noMessagesPlaceholder');
+            if (placeholder) placeholder.remove();
+
+            const container = document.createElement('div');
+            container.className = `message-container ${msg.is_me ? 'me' : 'other'}`;
+
+            const bubble = document.createElement('div');
+            bubble.className = `message-bubble ${msg.is_me ? 'message-bubble-me' : 'message-bubble-other'}`;
+            bubble.textContent = msg.content;
+
+            const time = document.createElement('div');
+            time.className = 'message-time';
+            
+            const timeText = document.createElement('span');
+            timeText.textContent = msg.timestamp;
+            time.appendChild(timeText);
+
+            if (msg.is_me) {
+                const receipt = document.createElement('span');
+                receipt.className = `message-receipt ${msg.is_read ? 'receipt-read' : 'receipt-unread'}`;
+                receipt.textContent = msg.is_read ? '✓✓' : '✓';
+                receipt.title = msg.is_read ? 'Read' : 'Delivered';
+                time.appendChild(receipt);
+            }
+
+            container.appendChild(bubble);
+            container.appendChild(time);
+            chatMessagesArea.appendChild(container);
+        }
+
+        function scrollToBottom() {
+            chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
+        }
+
+        // 12. Send Message over WebSocket with Input Handling & Auto-Focus
+        sendMessageForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const content = messageInput.value.trim();
+            if (!content || !activeUserId) return;
+
+            if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+                // Clear typing status before sending
+                if (isTypingState) {
+                    sendTypingSignal(false);
+                    isTypingState = false;
+                    clearTimeout(typingTimeout);
+                }
+
+                // Send message payload
+                chatSocket.send(JSON.stringify({
+                    receiver_id: activeUserId,
+                    content: content
+                }));
+
+                // Reset input, disable button until new text is typed, and maintain focus
+                messageInput.value = '';
+                toggleSendButtonState();
+                messageInput.focus();
+            }
+        });
+    });
+</script>
+{% endblock footer %}

@@ -1,0 +1,493 @@
+{% extends 'base.html' %}
+
+{% block title %}DirectChat - Private Messaging{% endblock %}
+
+{% block body_class %}bg-dark-saas text-light{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* ==========================================================================
+       DirectChat - Premium SaaS Landing Page
+       ========================================================================== */
+    :root {
+        --bg-dark: #090d16;
+        --bg-card: rgba(15, 23, 42, 0.6);
+        --border-glass: rgba(255, 255, 255, 0.08);
+        --border-hover: rgba(56, 189, 248, 0.25);
+        --accent-blue: #38bdf8;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+    }
+
+    body.bg-dark-saas {
+        background-color: var(--bg-dark) !important;
+        color: var(--text-primary);
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    /* Ambient Background Glow */
+    .saas-bg-glow {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+        background: 
+            radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+            radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 45%);
+    }
+
+    /* Typography Accents */
+    .gradient-text-subtle {
+        background: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .badge-eyebrow {
+        color: var(--accent-blue);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 0.6rem;
+    }
+
+    /* Navbar */
+    .navbar-saas {
+        background: rgba(9, 13, 22, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-glass);
+        padding: 0.75rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1030;
+    }
+
+    .btn-ghost-saas {
+        color: var(--text-primary);
+        border: 1px solid var(--border-glass);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.45rem 1.1rem;
+        font-size: 0.88rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-ghost-saas:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary-saas {
+        background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        padding: 0.5rem 1.25rem;
+        font-size: 0.88rem;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-primary-saas:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.38);
+        color: #ffffff;
+    }
+
+    /* Refined Chat Preview Window Mockup */
+    .preview-glow-wrapper {
+        position: relative;
+    }
+    .preview-bg-glow {
+        position: absolute;
+        inset: -12px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, rgba(168, 85, 247, 0.12) 50%, transparent 75%);
+        border-radius: 20px;
+        filter: blur(18px);
+        z-index: 0;
+    }
+    .mini-window {
+        position: relative;
+        z-index: 1;
+        background: #0b1120;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+    .mini-header {
+        background: #070a14;
+        padding: 0.65rem 0.9rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .mini-body {
+        display: flex;
+        height: 260px;
+    }
+    .mini-sidebar {
+        width: 36%;
+        background: #0d1527;
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .mini-chat {
+        width: 64%;
+        background: #090e1a;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .mini-contact {
+        padding: 0.6rem 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(56, 189, 248, 0.1);
+        border-left: 2.5px solid var(--accent-blue);
+    }
+    .mini-avatar {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.68rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    .mini-online {
+        width: 7px;
+        height: 7px;
+        background: #10b981;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        border: 1px solid #0d1527;
+    }
+    .mini-bubble {
+        max-width: 85%;
+        padding: 0.45rem 0.7rem;
+        border-radius: 10px;
+        font-size: 0.78rem;
+        line-height: 1.35;
+        margin-bottom: 0.4rem;
+    }
+    .bubble-in {
+        background: #1e293b;
+        color: #e2e8f0;
+        align-self: flex-start;
+        border-bottom-left-radius: 2px;
+    }
+    .bubble-out {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #ffffff;
+        align-self: flex-end;
+        border-bottom-right-radius: 2px;
+    }
+    .typing-dots {
+        display: inline-flex;
+        gap: 3px;
+        padding: 3px 6px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 8px;
+    }
+    .typing-dot {
+        width: 4px;
+        height: 4px;
+        background: #94a3b8;
+        border-radius: 50%;
+        animation: typingBlink 1.4s infinite fill-mode: both;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingBlink {
+        0% { opacity: 0.2; transform: scale(0.8); }
+        20% { opacity: 1; transform: scale(1.1); }
+        100% { opacity: 0.2; transform: scale(0.8); }
+    }
+
+    /* Feature Cards */
+    .feature-card-compact {
+        background: var(--bg-card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-glass);
+        border-radius: 12px;
+        padding: 1.15rem;
+        transition: all 0.2s ease;
+    }
+    .feature-card-compact:hover {
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+    }
+    .feature-icon-box {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        background: rgba(56, 189, 248, 0.1);
+        color: var(--accent-blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block navbar %}
+<!-- 1. HEADER / NAVBAR -->
+<nav class="navbar navbar-expand navbar-dark navbar-saas">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'home' %}{% endif %}">
+            <div class="d-flex align-items-center justify-content-center rounded-2" style="background: linear-gradient(135deg, #2563eb, #7c3aed); width: 30px; height: 30px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill text-white" viewBox="0 0 16 16">
+                    <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15"/>
+                </svg>
+            </div>
+            <span class="fs-5 fw-bold text-white tracking-tight">DirectChat</span>
+        </a>
+
+        <div class="d-flex align-items-center gap-3 ms-auto">
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="btn btn-primary-saas">Dashboard</a>
+                <a href="{% url 'logout' %}" class="btn btn-ghost-saas">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-ghost-saas">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-primary-saas">Create Account</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+{% endblock navbar %}
+
+{% block main_layout %}
+<div class="saas-bg-glow"></div>
+
+<main class="flex-grow-1 d-flex flex-column justify-content-center py-3">
+    <!-- 2. HERO SECTION -->
+    <section class="py-4 py-lg-5">
+        <div class="container">
+            <div class="row align-items-center g-4 g-lg-5">
+                <!-- Left Column -->
+                <div class="col-lg-6 text-center text-lg-start">
+                    <div class="badge-eyebrow mb-2.5">
+                        PRIVATE MESSAGING
+                    </div>
+
+                    <h1 class="display-4 fw-extrabold text-white tracking-tight mb-3 lh-1">
+                        Conversations.<br>
+                        <span class="gradient-text-subtle">Made simple.</span>
+                    </h1>
+
+                    <p class="text-secondary mb-4 fs-6 max-w-xl mx-auto mx-lg-0" style="color: #94a3b8 !important;">
+                        Connect privately, message instantly, and stay in the conversation.
+                    </p>
+
+                    <div class="d-flex flex-sm-row flex-column justify-content-center justify-content-lg-start gap-3">
+                        <a href="{% url 'login' %}" class="btn btn-ghost-saas py-2.5 px-4">
+                            Login
+                        </a>
+                        <a href="{% url 'register' %}" class="btn btn-primary-saas py-2.5 px-4">
+                            Create Account
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: 3. CHAT PRODUCT PREVIEW -->
+                <div class="col-lg-6">
+                    <div class="preview-glow-wrapper">
+                        <div class="preview-bg-glow"></div>
+                        <div class="mini-window">
+                            <!-- Window Titlebar -->
+                            <div class="mini-header">
+                                <div class="d-flex gap-1.5">
+                                    <div class="rounded-circle bg-danger opacity-75" style="width: 8px; height: 8px;"></div>
+                                    <div class="rounded-circle bg-warning opacity-75" style="width: 8px; height: 8px;"></div>
+                                    <div class="rounded-circle bg-success opacity-75" style="width: 8px; height: 8px;"></div>
+                                </div>
+                                <div class="small text-muted font-monospace" style="font-size: 0.72rem;">DirectChat</div>
+                                <div class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25" style="font-size: 0.6rem;">Connected</div>
+                            </div>
+
+                            <!-- Mini App Content -->
+                            <div class="mini-body">
+                                <!-- Sidebar -->
+                                <div class="mini-sidebar d-none d-sm-block">
+                                    <div class="mini-contact">
+                                        <div class="mini-avatar">
+                                            AJ
+                                            <div class="mini-online"></div>
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <div class="fw-bold text-white small" style="font-size: 0.75rem;">Alice Johnson</div>
+                                            <div class="text-secondary text-truncate" style="font-size: 0.65rem;">That sounds great!</div>
+                                        </div>
+                                    </div>
+                                    <div class="p-2 opacity-50">
+                                        <div class="d-flex align-items-center gap-2 p-1">
+                                            <div class="mini-avatar" style="background: #475569;">BS</div>
+                                            <div class="small text-muted" style="font-size: 0.72rem;">Bob Smith</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Chat Main Pane -->
+                                <div class="mini-chat p-2.5 flex-grow-1">
+                                    <div class="d-flex align-items-center justify-content-between pb-1.5 mb-1 border-bottom border-secondary border-opacity-25">
+                                        <div class="d-flex align-items-center gap-1.5">
+                                            <div class="mini-avatar" style="width: 22px; height: 22px; font-size: 0.62rem;">AJ</div>
+                                            <span class="fw-bold text-white small" style="font-size: 0.78rem;">Alice Johnson</span>
+                                            <span class="text-success small fw-semibold" style="font-size: 0.65rem;">● Online</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-column gap-1 overflow-hidden py-1">
+                                        <div class="mini-bubble bubble-in">
+                                            Hey! How are you?
+                                        </div>
+                                        <div class="mini-bubble bubble-out">
+                                            I'm good! Working on something exciting.
+                                            <div class="text-white-50 text-end" style="font-size: 0.6rem;">
+                                                10:43 AM <span style="color: #38bdf8;">✓✓</span>
+                                            </div>
+                                        </div>
+                                        <div class="mini-bubble bubble-in">
+                                            That sounds great!
+                                        </div>
+
+                                        <!-- Typing Indicator -->
+                                        <div class="d-flex align-items-center gap-1.5 mt-0.5">
+                                            <span class="text-muted" style="font-size: 0.68rem;">Alice is typing</span>
+                                            <div class="typing-dots">
+                                                <div class="typing-dot"></div>
+                                                <div class="typing-dot"></div>
+                                                <div class="typing-dot"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Mock Input -->
+                                    <div class="pt-1.5 border-top border-secondary border-opacity-25">
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control bg-dark text-light border-secondary opacity-75" placeholder="Type a message..." style="font-size: 0.72rem; border-color: rgba(255,255,255,0.15) !important;" disabled>
+                                            <button class="btn btn-primary" type="button" style="background: var(--accent-blue); border: none;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                                                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-6.108 8.158a.5.5 0 0 0-.707.707l2.646 2.647c.25.25.6.3.85.12l.142-.1.08-.08 1.157-1.157a.5.5 0 0 0-.08-.886z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. FEATURE CARDS (4 Items Only) -->
+    <section class="py-4 border-top border-bottom border-secondary border-opacity-10" style="background: rgba(255, 255, 255, 0.01);">
+        <div class="container">
+            <div class="row g-3">
+                <!-- Card 1: Instant Messaging -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="feature-card-compact h-100">
+                        <div class="feature-icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                                <path d="M8.16 0a.5.5 0 0 0-.5.5v5.5H2a.5.5 0 0 0-.416.78l6 8.5a.5.5 0 0 0 .832-.48l-1.2-4.8H14a.5.5 0 0 0 .416-.78l-6-8.5A.5.5 0 0 0 8.16 0"/>
+                            </svg>
+                        </div>
+                        <h6 class="fw-bold text-white mb-1" style="font-size: 0.88rem;">Instant Messaging</h6>
+                        <p class="text-secondary small mb-0" style="font-size: 0.78rem;">Send and receive messages instantly.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Private Conversations -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="feature-card-compact h-100">
+                        <div class="feature-icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-shield-lock-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.777 11.777 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.158 7.158 0 0 0 1.048-.625 11.775 11.775 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.541 1.541 0 0 0-1.044-1.263 62.467 62.467 0 0 0-2.887-.87C9.843.266 8.69 0 8 0m0 5a1.5 1.5 0 0 1 1.5 1.5v1.628a1.5 1.5 0 1 1-3 0V6.5A1.5 1.5 0 0 1 8 5"/>
+                            </svg>
+                        </div>
+                        <h6 class="fw-bold text-white mb-1" style="font-size: 0.88rem;">Private Conversations</h6>
+                        <p class="text-secondary small mb-0" style="font-size: 0.78rem;">Chat directly with other users.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3: Typing Indicators -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="feature-card-compact h-100">
+                        <div class="feature-icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9.0 1.5 14.5l5.5-1.793z"/>
+                            </svg>
+                        </div>
+                        <h6 class="fw-bold text-white mb-1" style="font-size: 0.88rem;">Typing Indicators</h6>
+                        <p class="text-secondary small mb-0" style="font-size: 0.78rem;">See when someone is typing.</p>
+                    </div>
+                </div>
+
+                <!-- Card 4: Read Receipts -->
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="feature-card-compact h-100">
+                        <div class="feature-icon-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+                                <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 9.293 1.854 6.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.501.502 6.146-6.147.708.707z"/>
+                                <path d="M5.354 7.354a.5.5 0 0 0-.708-.708L1.5 9.793l.354.354.853-.853z"/>
+                            </svg>
+                        </div>
+                        <h6 class="fw-bold text-white mb-1" style="font-size: 0.88rem;">Read Receipts</h6>
+                        <p class="text-secondary small mb-0" style="font-size: 0.78rem;">Know when your messages have been read.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock main_layout %}
+
+{% block footer %}
+<!-- 5. PERFECTLY ALIGNED 3-COLUMN FOOTER -->
+<footer class="py-3 border-top border-secondary border-opacity-10" style="background: #060911;">
+    <div class="container">
+        <div class="row align-items-center g-2 text-center text-sm-start">
+            <div class="col-12 col-sm-4">
+                <strong class="text-white fs-6">DirectChat</strong>
+            </div>
+            <div class="col-12 col-sm-4 text-center">
+                <span class="text-secondary small" style="color: #94a3b8 !important; font-size: 0.82rem;">Private conversations, made simple.</span>
+            </div>
+            <div class="col-12 col-sm-4 text-sm-end">
+                <span class="text-muted small" style="color: #64748b !important; font-size: 0.82rem;">&copy; 2026 DirectChat</span>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock footer %}
